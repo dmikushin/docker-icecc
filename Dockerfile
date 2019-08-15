@@ -1,5 +1,5 @@
-FROM ubuntu:latest
-MAINTAINER jrjang@gmail.com
+FROM ubuntu:18.04
+MAINTAINER daecks@gmail.com
 
 ENV ICECC_ENABLE_SCHEDULER=0
 
@@ -9,11 +9,16 @@ COPY scripts/build.sh /tmp/build.sh
 COPY scripts/icecc-run.sh /usr/local/bin/icecc-run.sh
 
 RUN apt-get -y update && \
-  apt-get -y install build-essential autoconf git libtool libcap-ng-dev liblzo2-dev
+  apt-get -y install build-essential autoconf git libtool libcap-ng-dev \
+  liblzo2-dev libzstd-dev libarchive-dev
+RUN apt-get -y install sudo
 
 RUN /tmp/build.sh
-RUN groupadd icecc && \
-  useradd -d /var/cache/icecc -m -g icecc -s /bin/false icecc
+
+RUN useradd --create-home -s /bin/bash icecc
+RUN echo "icecc ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/icecc
+WORKDIR /home/icecc
+CMD /bin/bash
 
 USER icecc
 
