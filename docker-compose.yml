@@ -1,0 +1,14 @@
+version: '3.7'
+
+services:
+  icecc:
+    image: icecc:jammy
+    environment:
+      - ICECC_ENABLE_SCHEDULER=1
+    restart: unless-stopped
+    ports:
+      - 127.0.0.1::10245/tcp
+      - 127.0.0.1::8765/tcp
+      - 127.0.0.1::8766/tcp
+      - 127.0.0.1::8765/udp
+
